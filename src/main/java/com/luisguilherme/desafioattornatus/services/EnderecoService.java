@@ -19,7 +19,7 @@ public class EnderecoService {
 
 	@Autowired
 	private EnderecoRepository repository;
-	
+
 	@Autowired
 	private PessoaRepository pessoaRepository;
 
@@ -31,7 +31,7 @@ public class EnderecoService {
 		entity.setNumero(dto.getNumero());
 		entity.setCidade(dto.getCidade());
 		entity.setPessoa(dto.getPessoa());
-		entity.setEnderecoPrincipal(dto.isEnderecoPrincipal());		
+		entity.setEnderecoPrincipal(dto.isEnderecoPrincipal());
 
 		List<Endereco> enderecos = entity.getPessoa().getEnderecos();
 
@@ -39,18 +39,29 @@ public class EnderecoService {
 			enderecos.forEach(e -> e.setEnderecoPrincipal(false));
 			entity.setEnderecoPrincipal(true);
 		}
-		
+
 		enderecos.add(entity);
 		entity = repository.save(entity);
 		pessoaRepository.save(entity.getPessoa());
 		return new EnderecoDTO(entity);
 	}
-	
+
 	@Transactional(readOnly = true)
 	public List<EnderecoDTO> findAll(Long pessoaId) {
-		Pessoa pessoa = pessoaRepository.findById(pessoaId)
-				.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+		Pessoa pessoa = getPessoaById(pessoaId);
 		List<Endereco> result = repository.findEnderecoByPessoaId(pessoa.getId());
 		return result.stream().map(x -> new EnderecoDTO(x)).toList();
+	}
+
+	@Transactional(readOnly = true)
+	public EnderecoDTO findEnderecoPrincipal(Long pessoaId) {
+		Pessoa pessoa = getPessoaById(pessoaId);				
+		return new EnderecoDTO(repository.findEnderecoPrincipalByPessoaId(pessoa.getId()));
+	}
+
+	private Pessoa getPessoaById(Long pessoaId) {
+		Pessoa pessoa = pessoaRepository.findById(pessoaId)
+				.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+		return pessoa;
 	}
 }

@@ -24,6 +24,8 @@ import com.luisguilherme.desafioattornatus.repositories.EnderecoRepository;
 import com.luisguilherme.desafioattornatus.repositories.PessoaRepository;
 import com.luisguilherme.desafioattornatus.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @ExtendWith(SpringExtension.class)
 public class EnderecoServiceTests {
 	
@@ -57,6 +59,9 @@ public class EnderecoServiceTests {
 		
 		Mockito.when(pessoaRepository.findById(existingId)).thenReturn(Optional.of(pessoa));
 		Mockito.when(pessoaRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+		
+		Mockito.when(repository.findEnderecoPrincipalByPessoaId(existingId)).thenReturn(endereco);
+		Mockito.when(repository.findEnderecoPrincipalByPessoaId(nonExistingId)).thenThrow(EntityNotFoundException.class);
 	}
 	
 	@Test
@@ -79,6 +84,23 @@ public class EnderecoServiceTests {
 
 	@Test
 	public void findAllShouldReturnResourceNotFoundExceptionWhenIdDoesNotExists() {		
+		
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			service.findAll(nonExistingId);
+		});
+	}
+	
+	@Test
+	public void findEnderecoPrincipalShouldReturnEnderecoDTOWhenPessoaIdExists() {		
+		
+		EnderecoDTO result = service.findEnderecoPrincipal(existingId);
+		
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals(result.getId(), existingId);
+	}
+
+	@Test
+	public void findEnderecoPrincipalShouldReturnResourceNotFoundExceptionWhenIdDoesNotExists() {		
 		
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.findAll(nonExistingId);
