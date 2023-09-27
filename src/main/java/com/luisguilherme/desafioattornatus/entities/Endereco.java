@@ -96,6 +96,7 @@ public class Endereco {
 	}
 
 	public void setEnderecoPrincipal(boolean enderecoPrincipal) {
+		/*
 		if (enderecoPrincipal && pessoa != null) {
 			for (Endereco endereco : pessoa.getEnderecos()) {
 				if (endereco.isEnderecoPrincipal()) {
@@ -103,6 +104,7 @@ public class Endereco {
 				}
 			}
 		}
+		*/
 		this.enderecoPrincipal = enderecoPrincipal;
 	}
 
