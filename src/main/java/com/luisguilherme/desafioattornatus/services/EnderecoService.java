@@ -4,11 +4,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.luisguilherme.desafioattornatus.dto.EnderecoDTO;
+import com.luisguilherme.desafioattornatus.dto.PessoaDTO;
 import com.luisguilherme.desafioattornatus.entities.Endereco;
+import com.luisguilherme.desafioattornatus.entities.Pessoa;
 import com.luisguilherme.desafioattornatus.repositories.EnderecoRepository;
 import com.luisguilherme.desafioattornatus.repositories.PessoaRepository;
+import com.luisguilherme.desafioattornatus.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class EnderecoService {
@@ -40,5 +44,13 @@ public class EnderecoService {
 		entity = repository.save(entity);
 		pessoaRepository.save(entity.getPessoa());
 		return new EnderecoDTO(entity);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<EnderecoDTO> findAll(Long pessoaId) {
+		Pessoa pessoa = pessoaRepository.findById(pessoaId)
+				.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+		List<Endereco> result = repository.findEnderecoByPessoaId(pessoa.getId());
+		return result.stream().map(x -> new EnderecoDTO(x)).toList();
 	}
 }
