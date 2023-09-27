@@ -2,9 +2,9 @@ package com.luisguilherme.desafioattornatus.services;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,6 +15,8 @@ import com.luisguilherme.desafioattornatus.dto.PessoaDTO;
 import com.luisguilherme.desafioattornatus.entities.Pessoa;
 import com.luisguilherme.desafioattornatus.factories.PessoaFactory;
 import com.luisguilherme.desafioattornatus.repositories.PessoaRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(SpringExtension.class)
 public class PessoaServiceTests {
@@ -38,6 +40,9 @@ public class PessoaServiceTests {
 		pessoaDTO = new PessoaDTO(pessoa);
 		
 		Mockito.when(repository.save(any())).thenReturn(pessoa);
+		
+		Mockito.when(repository.getReferenceById(existingId)).thenReturn(pessoa);
+		Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
 	}
 	
 	@Test
@@ -47,6 +52,16 @@ public class PessoaServiceTests {
 		
 		Assertions.assertNotNull(result);
 		Assertions.assertEquals(result.getId(), pessoa.getId());		
+	}
+	
+	@Test
+	public void updateShouldReturnPessoaDTOWhenIdExists() {
+		
+		PessoaDTO result = service.update(existingId, pessoaDTO);
+		
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals(result.getId(), existingId);	
+		Assertions.assertEquals(result.getNome(), pessoaDTO.getNome());
 	}
 
 
