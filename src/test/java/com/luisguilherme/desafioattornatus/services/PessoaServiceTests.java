@@ -2,6 +2,8 @@ package com.luisguilherme.desafioattornatus.services;
 
 import static org.mockito.ArgumentMatchers.any;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import com.luisguilherme.desafioattornatus.dto.PessoaDTO;
 import com.luisguilherme.desafioattornatus.entities.Pessoa;
 import com.luisguilherme.desafioattornatus.factories.PessoaFactory;
 import com.luisguilherme.desafioattornatus.repositories.PessoaRepository;
+import com.luisguilherme.desafioattornatus.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -43,6 +46,9 @@ public class PessoaServiceTests {
 		
 		Mockito.when(repository.getReferenceById(existingId)).thenReturn(pessoa);
 		Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
+		
+		Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(pessoa));
+		Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
 	}
 	
 	@Test
@@ -64,5 +70,22 @@ public class PessoaServiceTests {
 		Assertions.assertEquals(result.getNome(), pessoaDTO.getNome());
 	}
 
+	@Test
+	public void findByIdShouldReturnPessoaDTOWhenIdExists() {
+		
+		PessoaDTO result = service.findById(existingId);
+		
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals(result.getId(), existingId);
+		Assertions.assertEquals(result.getNome(), pessoa.getNome());
+	}
+	
+	@Test
+	public void findByIdShouldReturnResourceNotFoundExceptionWhenIdDoesNotExists() {		
+		
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			service.findById(nonExistingId);
+		});
+	}
 
 }
