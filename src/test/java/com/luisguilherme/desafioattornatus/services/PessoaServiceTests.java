@@ -1,9 +1,14 @@
 package com.luisguilherme.desafioattornatus.services;
 
+import static org.mockito.ArgumentMatchers.any;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.luisguilherme.desafioattornatus.dto.PessoaDTO;
@@ -31,7 +36,18 @@ public class PessoaServiceTests {
 		nonExistingId = 2L;
 		pessoa = PessoaFactory.createPessoa();
 		pessoaDTO = new PessoaDTO(pessoa);
-
+		
+		Mockito.when(repository.save(any())).thenReturn(pessoa);
 	}
+	
+	@Test
+	public void insertShouldReturnPessoaDTO() {
+		
+		PessoaDTO result = service.insert(pessoaDTO);
+		
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals(result.getId(), pessoa.getId());		
+	}
+
 
 }
