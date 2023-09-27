@@ -1,5 +1,7 @@
 package com.luisguilherme.desafioattornatus.dto;
 
+import java.util.Objects;
+
 import com.luisguilherme.desafioattornatus.entities.Endereco;
 import com.luisguilherme.desafioattornatus.entities.Pessoa;
 
@@ -94,6 +96,23 @@ public class EnderecoDTO {
 
 	public void setEnderecoPrincipal(boolean enderecoPrincipal) {
 		this.enderecoPrincipal = enderecoPrincipal;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EnderecoDTO other = (EnderecoDTO) obj;
+		return Objects.equals(id, other.id);
 	}
 
 }

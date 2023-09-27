@@ -2,6 +2,7 @@ package com.luisguilherme.desafioattornatus.services;
 
 import static org.mockito.ArgumentMatchers.any;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -49,6 +50,8 @@ public class PessoaServiceTests {
 		
 		Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(pessoa));
 		Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
+		
+		Mockito.when(repository.findAll()).thenReturn(List.of(pessoa));
 	}
 	
 	@Test
@@ -86,6 +89,15 @@ public class PessoaServiceTests {
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.findById(nonExistingId);
 		});
+	}
+	
+	@Test
+	public void findAllShouldReturnListofPessoaDTO() {		
+		
+		List<PessoaDTO> result = service.findAll();
+		
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals(List.of(pessoaDTO), result);
 	}
 
 }

@@ -3,6 +3,8 @@ package com.luisguilherme.desafioattornatus.dto;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import com.luisguilherme.desafioattornatus.entities.Endereco;
 import com.luisguilherme.desafioattornatus.entities.Pessoa;
 
@@ -56,6 +58,23 @@ public class PessoaDTO {
 
 	public List<Endereco> getEnderecos() {
 		return enderecos;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PessoaDTO other = (PessoaDTO) obj;
+		return Objects.equals(id, other.id);
 	}
 
 }
