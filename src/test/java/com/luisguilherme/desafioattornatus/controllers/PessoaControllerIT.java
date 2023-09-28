@@ -1,6 +1,7 @@
 package com.luisguilherme.desafioattornatus.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,7 +37,7 @@ public class PessoaControllerIT {
 	@BeforeEach
 	void setUp() throws Exception {
 		existingId = 1L;
-		nonExistingId = 2L;
+		nonExistingId = 100L;
 		countTotalPessoas = 7L;
 	}
 	
@@ -57,5 +58,39 @@ public class PessoaControllerIT {
 		result.andExpect(status().isCreated());
 		result.andExpect(jsonPath("$.id").value(countTotalPessoas+1));
 		result.andExpect(jsonPath("$.nome").value(expectedName));
+	}
+	
+	@Test
+	public void updateShouldReturnPessoaDTOWhenIdExists() throws Exception {
+		
+		PessoaDTO pessoaDTO = PessoaFactory.createPessoaDTO();
+		String jsonBody = objectMapper.writeValueAsString(pessoaDTO);
+		
+		String expectedName = pessoaDTO.getNome();		
+		
+		ResultActions result = 
+				mockMvc.perform(put("/pessoas/{id}", existingId)
+					.content(jsonBody)
+					.contentType(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isOk());
+		result.andExpect(jsonPath("$.id").value(existingId));
+		result.andExpect(jsonPath("$.nome").value(expectedName));
+	}
+	
+	@Test
+	public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+		
+		PessoaDTO pessoaDTO = PessoaFactory.createPessoaDTO();
+		String jsonBody = objectMapper.writeValueAsString(pessoaDTO);
+		
+		ResultActions result = 
+				mockMvc.perform(put("/pessoas/{id}", nonExistingId)
+					.content(jsonBody)
+					.contentType(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isNotFound());
 	}
 }
