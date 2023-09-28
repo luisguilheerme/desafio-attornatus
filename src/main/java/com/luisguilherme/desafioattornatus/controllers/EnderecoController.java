@@ -1,9 +1,11 @@
 package com.luisguilherme.desafioattornatus.controllers;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.luisguilherme.desafioattornatus.dto.EnderecoDTO;
-import com.luisguilherme.desafioattornatus.dto.PessoaDTO;
 import com.luisguilherme.desafioattornatus.services.EnderecoService;
-import com.luisguilherme.desafioattornatus.services.PessoaService;
 
 @RestController
 @RequestMapping(value = "/enderecos")
@@ -30,4 +30,9 @@ public class EnderecoController {
 		return ResponseEntity.created(uri).body(dto);
 	}
 
+	@GetMapping(value = "/{pessoaId}")
+	public ResponseEntity<List<EnderecoDTO>> findAll(@PathVariable Long pessoaId) {
+		List<EnderecoDTO> dto = service.findAll(pessoaId);
+		return ResponseEntity.ok(dto);
+	}
 }

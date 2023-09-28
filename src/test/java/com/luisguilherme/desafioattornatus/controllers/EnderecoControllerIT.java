@@ -1,5 +1,7 @@
 package com.luisguilherme.desafioattornatus.controllers;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,11 +33,13 @@ public class EnderecoControllerIT {
 	
 	private Long existingId;
 	private Long nonExistingId;
+	private Long countTotalEnderecos;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		existingId = 1L;
-		nonExistingId = 2L;
+		nonExistingId = 100L;
+		countTotalEnderecos = 9L;
 	}
 	
 	@Test
@@ -53,8 +57,50 @@ public class EnderecoControllerIT {
 					.accept(MediaType.APPLICATION_JSON));
 		
 		result.andExpect(status().isCreated());
-		result.andExpect(jsonPath("$.id").value(existingId));
+		result.andExpect(jsonPath("$.id").value(countTotalEnderecos+1));
 		result.andExpect(jsonPath("$.logradouro").value(expectedName));
+	}
+	
+	@Test
+	public void insertShouldReturnNotFoundWhenIdDoesNotExists() throws Exception {
+		
+		EnderecoDTO enderecoDTO = EnderecoFactory.createEnderecoDTO();
+		String jsonBody = objectMapper.writeValueAsString(enderecoDTO);
+		
+		ResultActions result = 
+				mockMvc.perform(post("/enderecos/{pessoaId}", nonExistingId)
+					.content(jsonBody)
+					.contentType(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void findAllShouldReturnListofEnderecoDTOWhenIdExists() throws Exception {
+		
+		ResultActions result = 
+				mockMvc.perform(get("/enderecos/{pessoaId}", existingId)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		 	result.andExpect(jsonPath("$").isArray()); 
+		    result.andExpect(jsonPath("$[0].logradouro", is("Rua das Palmeiras")));
+		    result.andExpect(jsonPath("$[1].logradouro", is("Rua das Alamedas")));	
+	}
+	
+	@Test
+	public void findAllShouldReturnNotFoundWhenIdDoesNotExists() throws Exception {
+		
+		EnderecoDTO enderecoDTO = EnderecoFactory.createEnderecoDTO();
+		String jsonBody = objectMapper.writeValueAsString(enderecoDTO);
+		
+		ResultActions result = 
+				mockMvc.perform(get("/enderecos/{pessoaId}", nonExistingId)
+					.content(jsonBody)
+					.contentType(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isNotFound());
 	}
 
 }
