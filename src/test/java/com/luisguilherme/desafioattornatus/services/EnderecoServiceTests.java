@@ -54,6 +54,8 @@ public class EnderecoServiceTests {
 		
 		Mockito.when(repository.save(any())).thenReturn(endereco);
 		Mockito.when(pessoaRepository.save(any())).thenReturn(pessoa);
+		Mockito.when(pessoaRepository.getReferenceById(existingId)).thenReturn(pessoa);
+		Mockito.when(pessoaRepository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
 		
 		Mockito.when(repository.findEnderecoByPessoaId(existingId)).thenReturn(List.of(endereco));
 		

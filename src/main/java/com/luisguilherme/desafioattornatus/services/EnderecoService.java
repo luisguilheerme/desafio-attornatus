@@ -41,8 +41,9 @@ public class EnderecoService {
 		}
 
 		enderecos.add(entity);
-		entity = repository.save(entity);
 		pessoaRepository.save(entity.getPessoa());
+		entity = repository.save(entity);
+		
 		return new EnderecoDTO(entity);
 	}
 
