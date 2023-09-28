@@ -69,8 +69,8 @@ public class EnderecoServiceTests {
 	@Test
 	public void insertShouldReturnEnderecoDTO() {
 		
-		EnderecoDTO result = service.insert(enderecoDTO);
-
+		EnderecoDTO result = service.insert(enderecoDTO, pessoa.getId());
+		System.out.println(result.getCidade() + result.getId());
 		Assertions.assertNotNull(result);
 		Assertions.assertEquals(result.getId(), endereco.getId());		
 	}

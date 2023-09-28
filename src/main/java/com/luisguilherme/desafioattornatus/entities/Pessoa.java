@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,17 +26,18 @@ public class Pessoa {
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant dataNascimento;
 
-	@OneToMany(mappedBy = "pessoa")
+	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 
 	public Pessoa() {
 
 	}
 
-	public Pessoa(Long id, String nome, Instant dataNascimento) {
+	public Pessoa(Long id, String nome, Instant dataNascimento, List<Endereco> enderecos) {
 		this.id = id;
 		this.nome = nome;
 		this.dataNascimento = dataNascimento;
+		this.enderecos = new ArrayList<>();;
 	}
 
 	public Long getId() {
@@ -66,6 +68,15 @@ public class Pessoa {
 		return enderecos;
 	}
 
+	public void addEndereco(Endereco entity) {
+		 if (entity.isEnderecoPrincipal()) {
+		        entity.getPessoa().getEnderecos().forEach(e -> e.setEnderecoPrincipal(false));
+		        entity.setEnderecoPrincipal(true);
+		    }
+        this.enderecos.add(entity);
+        entity.setPessoa(this);
+    }
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

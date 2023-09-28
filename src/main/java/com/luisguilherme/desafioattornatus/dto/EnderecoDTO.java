@@ -3,7 +3,6 @@ package com.luisguilherme.desafioattornatus.dto;
 import java.util.Objects;
 
 import com.luisguilherme.desafioattornatus.entities.Endereco;
-import com.luisguilherme.desafioattornatus.entities.Pessoa;
 
 public class EnderecoDTO {
 
@@ -13,22 +12,19 @@ public class EnderecoDTO {
 	private String numero;
 	private String cidade;
 
-	private Pessoa pessoa;
-
 	private boolean enderecoPrincipal;
 
 	public EnderecoDTO() {
 
 	}
 
-	public EnderecoDTO(Long id, String logradouro, String cep, String numero, String cidade, Pessoa pessoa,
+	public EnderecoDTO(Long id, String logradouro, String cep, String numero, String cidade,
 			boolean enderecoPrincipal) {
 		this.id = id;
 		this.logradouro = logradouro;
 		this.cep = cep;
 		this.numero = numero;
 		this.cidade = cidade;
-		this.pessoa = pessoa;
 		this.enderecoPrincipal = enderecoPrincipal;
 	}
 
@@ -38,7 +34,6 @@ public class EnderecoDTO {
 		cep = entity.getCep();
 		numero = entity.getNumero();
 		cidade = entity.getCidade();
-		pessoa = entity.getPessoa();
 		enderecoPrincipal = entity.isEnderecoPrincipal();
 	}
 
@@ -80,14 +75,6 @@ public class EnderecoDTO {
 
 	public void setCidade(String cidade) {
 		this.cidade = cidade;
-	}
-
-	public Pessoa getPessoa() {
-		return pessoa;
-	}
-
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
 	}
 
 	public boolean isEnderecoPrincipal() {

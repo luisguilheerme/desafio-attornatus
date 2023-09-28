@@ -8,13 +8,14 @@ import java.util.Objects;
 import com.luisguilherme.desafioattornatus.entities.Endereco;
 import com.luisguilherme.desafioattornatus.entities.Pessoa;
 
+
 public class PessoaDTO {
 
 	private Long id;
 	private String nome;
 	private Instant dataNascimento;
 
-	private List<Endereco> enderecos = new ArrayList<>();
+	private List<EnderecoDTO> enderecos = new ArrayList<>();
 
 	public PessoaDTO() {
 
@@ -23,13 +24,16 @@ public class PessoaDTO {
 	public PessoaDTO(Long id, String nome, Instant dataNascimento) {
 		this.id = id;
 		this.nome = nome;
-		this.dataNascimento = dataNascimento;
+		this.dataNascimento = dataNascimento;		
 	}
-
+	
 	public PessoaDTO(Pessoa entity) {
 		id = entity.getId();
 		nome = entity.getNome();
 		dataNascimento = entity.getDataNascimento();
+		for (Endereco e : entity.getEnderecos()) {
+			enderecos.add(new EnderecoDTO(e));
+		}
 	}
 
 	public Long getId() {
@@ -56,7 +60,7 @@ public class PessoaDTO {
 		this.dataNascimento = dataNascimento;
 	}
 
-	public List<Endereco> getEnderecos() {
+	public List<EnderecoDTO> getEnderecos() {
 		return enderecos;
 	}
 

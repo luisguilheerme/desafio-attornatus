@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.luisguilherme.desafioattornatus.dto.EnderecoDTO;
-import com.luisguilherme.desafioattornatus.dto.PessoaDTO;
 import com.luisguilherme.desafioattornatus.entities.Endereco;
 import com.luisguilherme.desafioattornatus.entities.Pessoa;
 import com.luisguilherme.desafioattornatus.repositories.EnderecoRepository;
@@ -23,28 +22,22 @@ public class EnderecoService {
 	@Autowired
 	private PessoaRepository pessoaRepository;
 
-	public EnderecoDTO insert(EnderecoDTO dto) {
+	public EnderecoDTO insert(EnderecoDTO dto, Long pessoaId) {
 
 		Endereco entity = new Endereco();
 		entity.setLogradouro(dto.getLogradouro());
 		entity.setCep(dto.getCep());
 		entity.setNumero(dto.getNumero());
 		entity.setCidade(dto.getCidade());
-		entity.setPessoa(dto.getPessoa());
 		entity.setEnderecoPrincipal(dto.isEnderecoPrincipal());
-
-		List<Endereco> enderecos = entity.getPessoa().getEnderecos();
-
-		if (entity.isEnderecoPrincipal()) {
-			enderecos.forEach(e -> e.setEnderecoPrincipal(false));
-			entity.setEnderecoPrincipal(true);
-		}
-
-		enderecos.add(entity);
-		pessoaRepository.save(entity.getPessoa());
-		entity = repository.save(entity);
+ 	
+		Pessoa pessoa = pessoaRepository.getReferenceById(pessoaId);
+		entity.setPessoa(pessoa);
 		
-		return new EnderecoDTO(entity);
+		pessoa.addEndereco(entity);
+		pessoa = pessoaRepository.save(pessoa);
+		entity = repository.save(entity);		
+		return new EnderecoDTO(entity);		
 	}
 
 	@Transactional(readOnly = true)
