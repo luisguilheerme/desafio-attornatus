@@ -1,5 +1,6 @@
 package com.luisguilherme.desafioattornatus.controllers;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -92,5 +93,28 @@ public class PessoaControllerIT {
 					.accept(MediaType.APPLICATION_JSON));
 		
 		result.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void findByIdShouldReturnPessoaDTOWhenIdExists() throws Exception {
+		
+		PessoaDTO pessoaDTO = PessoaFactory.createPessoaDTO();		
+		
+		ResultActions result = 
+				mockMvc.perform(get("/pessoas/{id}", existingId)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isOk());		
+		result.andExpect(jsonPath("$.nome").value(pessoaDTO.getNome()));		
+	}
+	
+	@Test
+	public void findByIdShouldReturnNotFoundWhenIdDoesNotExists() throws Exception {
+						
+		ResultActions result = 
+				mockMvc.perform(get("/pessoas/{id}", nonExistingId)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isNotFound());			
 	}
 }

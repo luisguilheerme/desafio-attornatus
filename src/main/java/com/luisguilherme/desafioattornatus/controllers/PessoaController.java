@@ -37,4 +37,9 @@ public class PessoaController {
 		return ResponseEntity.ok(dto);
 	}
 
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<PessoaDTO> findById(@PathVariable Long id) {
+		PessoaDTO dto = service.findById(id);
+		return ResponseEntity.ok(dto);
+	}
 }
