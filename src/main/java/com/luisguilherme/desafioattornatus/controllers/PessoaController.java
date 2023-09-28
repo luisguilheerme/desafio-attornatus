@@ -42,4 +42,10 @@ public class PessoaController {
 		PessoaDTO dto = service.findById(id);
 		return ResponseEntity.ok(dto);
 	}
+	
+	@GetMapping
+	public ResponseEntity<List<PessoaDTO>> findAll() {
+		List<PessoaDTO> dto = service.findAll();
+		return ResponseEntity.ok(dto);
+	}
 }

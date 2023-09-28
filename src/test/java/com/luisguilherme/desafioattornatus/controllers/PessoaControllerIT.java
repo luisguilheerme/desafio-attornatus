@@ -1,11 +1,13 @@
 package com.luisguilherme.desafioattornatus.controllers;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.hamcrest.collection.IsArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +118,18 @@ public class PessoaControllerIT {
 					.accept(MediaType.APPLICATION_JSON));
 		
 		result.andExpect(status().isNotFound());			
+	}
+	
+	@Test
+	public void findAllShouldReturnListofPessoaDTO() throws Exception {
+		
+		ResultActions result = 
+				mockMvc.perform(get("/pessoas")
+					.accept(MediaType.APPLICATION_JSON));
+		
+		 	result.andExpect(jsonPath("$").isArray()); 
+		    result.andExpect(jsonPath("$[0].nome", is("Maria")));
+		    result.andExpect(jsonPath("$[1].nome", is("João")));
+		    result.andExpect(jsonPath("$[2].nome", is("José")));		
 	}
 }
