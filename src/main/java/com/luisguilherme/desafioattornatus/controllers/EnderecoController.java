@@ -35,4 +35,10 @@ public class EnderecoController {
 		List<EnderecoDTO> dto = service.findAll(pessoaId);
 		return ResponseEntity.ok(dto);
 	}
+	
+	@GetMapping(value = "/{pessoaId}/main")
+	public ResponseEntity<EnderecoDTO> findEnderecoPrincipal(@PathVariable Long pessoaId) {
+		EnderecoDTO dto = service.findEnderecoPrincipal(pessoaId);
+		return ResponseEntity.ok(dto);
+	}
 }

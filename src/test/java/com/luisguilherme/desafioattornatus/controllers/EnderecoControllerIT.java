@@ -103,4 +103,29 @@ public class EnderecoControllerIT {
 		result.andExpect(status().isNotFound());
 	}
 
+	@Test
+	public void findEnderecoPrincipalShouldReturnEnderecoDTOWhenIdExists() throws Exception {
+		
+		ResultActions result = 
+				mockMvc.perform(get("/enderecos/{pessoaId}/main", existingId)
+					.accept(MediaType.APPLICATION_JSON));
+		
+			result.andExpect(status().isOk()); 
+		    result.andExpect(jsonPath("$.logradouro", is("Rua das Palmeiras")));	
+	}
+	
+	@Test
+	public void findEnderecoPrincipalShouldReturnNotFoundWhenIdDoesNotExists() throws Exception {
+		
+		EnderecoDTO enderecoDTO = EnderecoFactory.createEnderecoDTO();
+		String jsonBody = objectMapper.writeValueAsString(enderecoDTO);
+		
+		ResultActions result = 
+				mockMvc.perform(get("/enderecos/{pessoaId}/main", nonExistingId)
+					.content(jsonBody)
+					.contentType(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON));
+		
+		result.andExpect(status().isNotFound());
+	}
 }
