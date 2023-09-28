@@ -24,26 +24,26 @@ public class PessoaController {
 	@Autowired
 	private PessoaService service;
 
-	@PostMapping
+	@PostMapping(produces = "application/json")
 	public ResponseEntity<PessoaDTO> insert(@RequestBody PessoaDTO dto) {
 		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 
-	@PutMapping(value = "/{id}")
+	@PutMapping(value = "/{id}", produces = "application/json")
 	public ResponseEntity<PessoaDTO> update(@PathVariable Long id, @RequestBody PessoaDTO dto) {
 		dto = service.update(id, dto);
 		return ResponseEntity.ok(dto);
 	}
 
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/{id}", produces = "application/json")
 	public ResponseEntity<PessoaDTO> findById(@PathVariable Long id) {
 		PessoaDTO dto = service.findById(id);
 		return ResponseEntity.ok(dto);
 	}
 	
-	@GetMapping
+	@GetMapping(produces = "application/json")
 	public ResponseEntity<List<PessoaDTO>> findAll() {
 		List<PessoaDTO> dto = service.findAll();
 		return ResponseEntity.ok(dto);

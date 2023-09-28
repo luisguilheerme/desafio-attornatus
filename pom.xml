@@ -39,6 +39,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>org.springdoc</groupId>
+		    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		    <version>2.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -59,7 +64,7 @@
 						<exclude>com/luisguilherme/desafioattornatus/controllers/**</exclude>
 						<exclude>com/luisguilherme/desafioattornatus/controllers/handlers/**</exclude>
 						<exclude>com/luisguilherme/desafioattornatus/services/exceptions/**</exclude>
-						<exclude>com/luisguilherme/desafioattornatus/repositories/**</exclude>
+						<exclude>com/luisguilherme/desafioattornatus/config/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>

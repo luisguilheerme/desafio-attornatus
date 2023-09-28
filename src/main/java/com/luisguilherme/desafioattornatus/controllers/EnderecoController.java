@@ -23,20 +23,20 @@ public class EnderecoController {
 	@Autowired
 	private EnderecoService service;
 		
-	@PostMapping(value = "/{pessoaId}")
+	@PostMapping(value = "/{pessoaId}", produces = "application/json")
 	public ResponseEntity<EnderecoDTO> insert(@PathVariable Long pessoaId, @RequestBody EnderecoDTO dto) {
 		dto = service.insert(dto, pessoaId);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 
-	@GetMapping(value = "/{pessoaId}")
+	@GetMapping(value = "/{pessoaId}", produces = "application/json")
 	public ResponseEntity<List<EnderecoDTO>> findAll(@PathVariable Long pessoaId) {
 		List<EnderecoDTO> dto = service.findAll(pessoaId);
 		return ResponseEntity.ok(dto);
 	}
 	
-	@GetMapping(value = "/{pessoaId}/main")
+	@GetMapping(value = "/{pessoaId}/main", produces = "application/json")
 	public ResponseEntity<EnderecoDTO> findEnderecoPrincipal(@PathVariable Long pessoaId) {
 		EnderecoDTO dto = service.findEnderecoPrincipal(pessoaId);
 		return ResponseEntity.ok(dto);
