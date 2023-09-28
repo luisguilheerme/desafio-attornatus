@@ -30,14 +30,10 @@ public class PessoaService {
 
 	@Transactional
 	public PessoaDTO update(Long id, PessoaDTO dto) {
-		try {
 			Pessoa entity = repository.getReferenceById(id);
 			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);
 			return new PessoaDTO(entity);
-		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Recurso não encontrado");
-		}
 	}
 
 	@Transactional(readOnly = true)
